@@ -1,0 +1,5 @@
+feedback:
+  script:
+  - run_kate . cspark/ads02-eda-supervised-v2:production
+  tags:
+  - kate2.0
