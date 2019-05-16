@@ -124,6 +124,17 @@ def return_post_codes(df):
     :return: new DataFrame with the postcodes column
     """
 
-    raise NotImplementedError
+    patterns = [
+        r"[A-Z][0-9] *[0-9][A-Z][A-Z]", r"[A-Z][0-9][A-Z] *[0-9][A-Z][A-Z]",
+        r"[A-Z][0-9][0-9] *[0-9][A-Z][A-Z]",
+        r"[A-Z][A-Z][0-9] *[0-9][A-Z][A-Z]",
+        r"[A-Z][A-Z][0-9][A-Z] *[0-9][A-Z][A-Z]",
+        r"[A-Z][A-Z][0-9][0-9] *[0-9][A-Z][A-Z]"
+    ]
+    pattern = re.compile("|".join(patterns))
+    postcodes = df.text.apply(lambda x: " | ".join(pattern.findall(x))).values
+
+    return pd.DataFrame(postcodes, columns=["postcodes"])
+
 
 
