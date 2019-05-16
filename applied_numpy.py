@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def build_sequences(min_value, max_value, sequence_number):
     """
     Write a function that can generate the following sequences:
