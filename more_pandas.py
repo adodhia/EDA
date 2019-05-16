@@ -79,7 +79,7 @@ def return_location(df):
     :return: new DataFrame with the short_name column
     """
 
-     short_names = df.locations.apply(
+    short_names = df.locations.apply(
         lambda x: json.loads(x).get("short_name")).values
 
     return pd.DataFrame(short_names, columns=["short_name"])
