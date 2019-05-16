@@ -158,7 +158,20 @@ def distance_in_n_dimensions(df, point_a, point_b, n, scale):
     :return: distance between points in the subspace
     """
 
-    raise NotImplementedError
+    point_a = point_a.reshape(1, -1)
+    point_b = point_b.reshape(1, -1)
+
+    if scale:
+        scaler = StandardScaler()
+        df = scaler.fit_transform(df)
+        point_a = scaler.transform(point_a)
+        point_b = scaler.transform(point_b)
+
+    pca = PCA(n_components=n)
+    pca.fit(df)
+
+    return np.sqrt(np.sum((pca.transform(point_a) - pca.transform(point_b))**2))
+
 
 
 def find_outliers_pca(df, n, scale):
@@ -203,6 +216,20 @@ def find_outliers_pca(df, n, scale):
     :return: pandas DataFrame containing outliers only
     """
 
-    raise NotImplementedError
+    df_copy = df.copy()
+
+    if scale:
+        scaler = StandardScaler()
+        df_copy = scaler.fit_transform(df)
+
+    pca = PCA(n_components=1)
+    df_pca = pca.fit_transform(df_copy).squeeze()
+    mean_ = df_pca.mean()
+    std = df_pca.std()
+
+    msk_high = df_pca > mean_ + n * std
+    msk_low = df_pca < mean_ - n * std
+
+    return df.loc[msk_high | msk_low]
 
 
