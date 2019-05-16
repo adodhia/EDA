@@ -69,7 +69,17 @@ def feature_cleaner(df, low, high):
                     desired percentile range have been removed
     """
 
-    raise NotImplementedError
+    # retrieve for each feature
+    quantile = df.quantile([low, high])
+
+    # Define msks for values in range
+    msk_in_range = (quantile.iloc[0] < df) & (df < quantile.iloc[1])
+
+    new_df = df[msk_in_range]
+    new_df.dropna(axis=0, how='any', inplace=True)
+
+    return (new_df - new_df.mean()) / new_df.std()
+
 
 
 def get_feature(df):
