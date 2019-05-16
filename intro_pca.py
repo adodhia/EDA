@@ -3,6 +3,10 @@ All of them take at least a dataframe df as argument. To test your functions
 locally, we recommend using the wine dataset that you can load from sklearn by
 importing sklearn.datasets.load_wine"""
 
+import numpy as np
+import pandas as pd
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
 
 def get_cumulated_variance(df, scale):
     """Apply PCA on a DataFrame and return a new DataFrame containing
@@ -25,7 +29,18 @@ def get_cumulated_variance(df, scale):
     :return: a new DataFrame with cumulated variance in percent
     """
 
-    raise NotImplementedError
+    if scale:
+        scaler = StandardScaler()
+        df = scaler.fit_transform(df)
+
+    pca = PCA()
+    pca.fit(df)
+
+    cumsum = np.cumsum(pca.explained_variance_ratio_).reshape(1, -1)
+    return pd.DataFrame(
+        100 * cumsum,
+        columns=["PC{}".format(n + 1) for n in range(df.shape[1])])
+
 
 
 def get_coordinates_of_first_two(df, scale):
@@ -57,7 +72,18 @@ def get_coordinates_of_first_two(df, scale):
     :return: a new DataFrame with coordinates of PC1 and PC2
     """
 
-    raise NotImplementedError
+    cols = df.columns
+
+    if scale:
+        scaler = StandardScaler()
+        df = scaler.fit_transform(df)
+
+    pca = PCA()
+    pca.fit(df)
+
+    first_two = pca.components_[:2]
+    return pd.DataFrame(first_two, columns=cols, index=["PC1", "PC2"])
+
 
 
 def get_most_important_two(df, scale):
