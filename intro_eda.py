@@ -1,3 +1,5 @@
+import numpy as np
+
 def nan_processor(df, replacement_str):
     """
     Take a DataFrame and return one where all occurrences
@@ -22,7 +24,9 @@ def nan_processor(df, replacement_str):
         been removed
     """
 
-    raise NotImplementedError
+    tdf = df.replace(replacement_str, np.nan)
+    return tdf.dropna(axis=0, how='any')
+
 
 
 def feature_cleaner(df, low, high):
@@ -100,7 +104,11 @@ def get_feature(df):
     :returns:   Name of the column with largest K
     """
 
-    raise NotImplementedError
+    df_by_class = df.groupby("CLASS")
+    df_w_ratio = df_by_class.apply(lambda x: (np.max(x) - np.min(x)) / x.var())
+    df_sort = df_w_ratio.apply(lambda x: np.max(x) / np.min(x))
+    return df_sort.idxmax()
+
 
 
 def one_hot_encode(label_to_encode, labels):
@@ -121,6 +129,6 @@ def one_hot_encode(label_to_encode, labels):
     :return: a list of 0s and one 1
     """
 
-    raise NotImplementedError
+    return [1 if label_to_encode == label else 0 for label in labels]
 
 
