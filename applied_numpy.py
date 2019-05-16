@@ -60,7 +60,7 @@ def moving_averages(x, k):
     :returns: a numpy array z containing the moving averages.
     """
 
-     n = x.shape[0]
+    n = x.shape[0]
 
     return np.array([np.mean(x[i - k:i]) for i in range(k, n + 1)])
 
