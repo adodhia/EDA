@@ -2,7 +2,7 @@
 This exercise contains functions where you need to use pandas to
 apply various data aggregations and transformations.
 """
-
+import pandas as pd
 
 def get_prices_for_heaviest_item(inventory):
     """
@@ -33,7 +33,16 @@ def get_prices_for_heaviest_item(inventory):
 
     """
 
-    raise NotImplementedError
+    in_stock_inventory = inventory[inventory["in_stock"]]
+
+    if in_stock_inventory.empty:
+        return pd.Series()
+
+    return in_stock_inventory[in_stock_inventory["in_stock"]] \
+        .groupby('category') \
+        .apply(lambda subf: subf['price'][subf['weight'].idxmax()]) \
+        .rename_axis(None).sort_values(ascending=False)
+
 
 
 def reshape_temperature_data(measurements):
@@ -74,7 +83,10 @@ def reshape_temperature_data(measurements):
     for each temperature measurement in a given location. There should be no missing values.
     """
 
-    raise NotImplementedError
+    return pd.melt(measurements, id_vars=["location"], var_name="date", value_name="value")\
+        .sort_values(["location", "value"])\
+        .dropna().reset_index(drop=True)
+
 
 
 def compute_events_matrix_count(events):
