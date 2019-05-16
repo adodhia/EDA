@@ -1,3 +1,5 @@
+import numpy as np
+
 def build_sequences(min_value, max_value, sequence_number):
     """
     Write a function that can generate the following sequences:
@@ -20,7 +22,17 @@ def build_sequences(min_value, max_value, sequence_number):
     :returns: the right sequence as a np.array
     """
 
-    raise NotImplementedError
+    if sequence_number == 1:
+        seq = 2 * np.arange(50) + 1
+    elif sequence_number == 2:
+        seq = 50 - 5 * np.arange(50)
+    elif sequence_number == 3:
+        seq = 2**np.arange(50)
+    else:
+        raise ValueError
+
+    return seq[(seq <= max_value) & (seq >= min_value)]
+
 
 
 def moving_averages(x, k):
@@ -47,7 +59,10 @@ def moving_averages(x, k):
     :returns: a numpy array z containing the moving averages.
     """
 
-    raise NotImplementedError
+     n = x.shape[0]
+
+    return np.array([np.mean(x[i - k:i]) for i in range(k, n + 1)])
+
 
 
 def block_matrix(A, B):
@@ -72,6 +87,13 @@ def block_matrix(A, B):
     :returns: a numpy array with A and B on the diagonal.
     """
 
-    raise NotImplementedError
+    n = A.shape[0] + B.shape[0]
+    p = A.shape[1] + B.shape[1]
+
+    mat = np.zeros((n, p))
+    mat[:A.shape[0], :A.shape[1]] = A
+    mat[A.shape[0]:, A.shape[1]:] = B
+
+    return mat
 
 
