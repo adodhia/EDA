@@ -1,4 +1,7 @@
 """This exercise contains functions where you need to use pandas to build new columns from existing ones."""
+import json
+import re
+import pandas as pd
 
 
 def diff_in_days(df):
@@ -36,7 +39,12 @@ def diff_in_days(df):
     :return: new dataframe with differences in days between timestamps
     """
 
-    raise NotImplementedError
+    days_diff = abs(
+        pd.to_datetime(df.time_1, unit="s") -
+        pd.to_datetime(df.time_2, unit="s")).dt.days
+
+    return pd.DataFrame(days_diff, columns=["difference_days"])
+
 
 
 def return_location(df):
@@ -71,7 +79,11 @@ def return_location(df):
     :return: new DataFrame with the short_name column
     """
 
-    raise NotImplementedError
+     short_names = df.locations.apply(
+        lambda x: json.loads(x).get("short_name")).values
+
+    return pd.DataFrame(short_names, columns=["short_name"])
+
 
 
 def return_post_codes(df):
